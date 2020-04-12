@@ -39,4 +39,5 @@ return [
         'mark' => 'mark',
         'description' => 'description',
     ],
+    'badresult' => 'No description on your result',
 ];

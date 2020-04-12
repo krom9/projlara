@@ -9,7 +9,7 @@
         <h1>{{ $test->name }}</h1>
         <div class="row">
             <div class="col-12">
-                <h2 class="text-center m-auto font-weight-bold py-3">
+                <h2 class="m-auto font-weight-bold py-3 font-weight-bold">
                     {{ $answer->text }}
                 </h2>
                 <div class="row">

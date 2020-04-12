@@ -53,7 +53,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role_id' => ['required', 'integer', 'between:1,3'],
             'g-recaptcha-response' => 'required|captcha'
         ]);
     }
@@ -69,8 +68,8 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role_id' => isset($data['role_id']) ? 2 : 1, // 2 - составитель, 1 - тестируемый
+            'password' => bcrypt($data['password']),
+            'role_id' => array_key_exists('role_id', $data) ? 2 : 1, // 2 - составитель, 1 - тестируемый
         ]);
     }
 }

@@ -220,13 +220,14 @@ class TestController extends Controller
             $resultMark += $ask['checked'] * $ask['ask']['mark'];
         }
 
-        $resultDescription = Result::select(['text'])
+        $resultDescription = Result::where('test_id', $test->id)
             ->where('min', '<=', $resultMark)
             ->where('max', '>=', $resultMark)
-            ->orderBy('id')
-            ->get()
+            ->with('test')
             ->pluck('text')
             ->first();
+
+        $resultDescription = $resultDescription ?? __('tests.badresult');
 
         $result = "Ваш результат теста {$resultMark}";
 

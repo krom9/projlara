@@ -7,8 +7,8 @@
 @section('content')
     <div class="container">
         <h1>{{ $test->name }}</h1>
-        <h2>Results</h2>
+        <h2 class="py-3">{{ __('tests.results') }}</h2>
         <h3 class="pt-3 pb-1">{{ $result }}</h3>
-        <p>{{ $resultDescription }}</p>
+        <p class="pt-4 font-weight-bold">{{ $resultDescription }}</p>
     </div>
 @endsection

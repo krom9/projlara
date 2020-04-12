@@ -19,6 +19,5 @@
                 </div>
             @endforeach
         </div>
-        {{ $answers->links() }}
     </div>
 @endsection

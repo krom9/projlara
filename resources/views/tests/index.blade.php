@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    <div class="container">
         <h1 class="display-4 font-weight-bolder">{{ __('tests.tests') }}</h1>
         <p class="lead">
         @auth
@@ -32,4 +33,5 @@
                 на нашем сайте.
         @endauth
         </p>
+    </div>
 @endsection
