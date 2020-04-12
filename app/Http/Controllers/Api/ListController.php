@@ -23,6 +23,18 @@ class ListController extends Controller
             : Test::where('author_id', $userId)
                 ->orderBy('id')
                 ->get();
+
         return response()->json($tests);
+    }
+
+    public function getUsers()
+    {
+        $users = User::where('role_id', '!=', 3)
+            ->with('role')
+            ->orderBy('role_id')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($users);
     }
 }

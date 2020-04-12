@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Servers;
+namespace App\Services;
 
 use App\Http\Controllers\Controller;
 use App\Models\User\User;
@@ -10,12 +10,16 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::where('role_id', '!=', 3)
-            ->with('role')
-            ->orderBy('role_id')
-            ->orderBy('name')
-            ->get();
+        if(auth()->check()) {
+            $users = User::where('role_id', '!=', 3)
+                ->with('role')
+                ->orderBy('role_id')
+                ->orderBy('name')
+                ->get();
 
-        return $users;
+            return $users;
+        }
+
+        return false;
     }
 }

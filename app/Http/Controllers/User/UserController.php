@@ -16,7 +16,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('is.admin');
+//        $this->middleware('is.admin');
     }
 
     /**
@@ -26,19 +26,23 @@ class UserController extends Controller
      */
     public function index():View
     {
-        $breadcrumbs = [
-            __('users.breadcrumbs.home') => route('home.index'),
-            __('users.breadcrumbs.users') => ''
-        ];
+        if(auth()->user()->role_id === 3)
+        {
+            $breadcrumbs = [
+                __('users.breadcrumbs.home') => route('home.index'),
+                __('users.breadcrumbs.users') => ''
+            ];
 
-        $users = User::where('role_id', '!=', 3)
-            ->with('role')
-            ->orderBy('role_id')
-            ->orderBy('name')
-            ->get();
+            $users = User::where('role_id', '!=', 3)
+                ->with('role')
+                ->orderBy('role_id')
+                ->orderBy('name')
+                ->get();
 
-//        dd($users);
-        return view('dashboard/users/index')->with(compact(['users', 'breadcrumbs']));
+            return view('dashboard/users/index')->with(compact(['users', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -48,13 +52,17 @@ class UserController extends Controller
      */
     public function create():View
     {
-        $breadcrumbs = [
-            __('users.breadcrumbs.home') => route('home.index'),
-            __('users.breadcrumbs.users') => route('users.index'),
-            __('users.breadcrumbs.create') => ''
-        ];
+        if(auth()->user()->role_id === 3) {
+            $breadcrumbs = [
+                __('users.breadcrumbs.home') => route('home.index'),
+                __('users.breadcrumbs.users') => route('users.index'),
+                __('users.breadcrumbs.create') => ''
+            ];
 
-        return view('dashboard/users/create')->with(compact(['breadcrumbs']));
+            return view('dashboard/users/create')->with(compact(['breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -65,11 +73,15 @@ class UserController extends Controller
      */
     public function store(StoreRequest $request):RedirectResponse
     {
-        $data = $request->only(['name', 'email', 'password', 'role_id']);
-        $data['password'] = bcrypt($data['password']);
-        User::create($data);
+        if(auth()->user()->role_id === 3) {
+            $data = $request->only(['name', 'email', 'password', 'role_id']);
+            $data['password'] = bcrypt($data['password']);
+            User::create($data);
 
-        return redirect()->route('users.index');
+            return redirect()->route('users.index');
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -91,13 +103,18 @@ class UserController extends Controller
      */
     public function edit(User $user):View
     {
-        $breadcrumbs = [
-            __('users.breadcrumbs.home') => route('home.index'),
-            __('users.breadcrumbs.users') => route('users.index'),
-            __('users.breadcrumbs.edit') => ''
-        ];
+        if(auth()->user()->role_id === 3 || auth()->user()->id == $user->id)
+        {
+            $breadcrumbs = [
+                __('users.breadcrumbs.home') => route('home.index'),
+                __('users.breadcrumbs.users') => route('users.index'),
+                __('users.breadcrumbs.edit') => ''
+            ];
 
-        return view('dashboard/users/edit')->with(compact(['user', 'breadcrumbs']));
+            return view('dashboard/users/edit')->with(compact(['user', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -109,17 +126,21 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user):RedirectResponse
     {
-        $data = $request->only(['name', 'email', 'password', 'role_id']);
+        if(auth()->user()->role_id === 3 || auth()->user()->id == $user->id) {
+            $data = $request->only(['name', 'email', 'password', 'role_id']);
 
-        if(isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } elseif($request->has('password')) {
-            unset($data['password']);
+            if (isset($data['password'])) {
+                $data['password'] = bcrypt($data['password']);
+            } elseif ($request->has('password')) {
+                unset($data['password']);
+            }
+
+            $user->update($data);
+
+            return redirect()->route('users.index');
+        } else {
+            abort(404);
         }
-
-        $user->update($data);
-
-        return redirect()->route('users.index');
     }
 
     /**
@@ -131,19 +152,27 @@ class UserController extends Controller
      */
     public function destroy(User $user):RedirectResponse
     {
-        $user->delete();
+        if(auth()->user()->role_id === 3) {
+            $user->delete();
 
-        return redirect()->route('users.index');
+            return redirect()->route('users.index');
+        } else {
+            abort(404);
+        }
     }
 
     public function confirmDelete(User $user)
     {
-        $breadcrumbs = [
-            __('users.breadcrumbs.home') => route('home.index'),
-            __('users.breadcrumbs.users') => route('users.index'),
-            __('users.breadcrumbs.delete') => ''
-        ];
+        if(auth()->user()->role_id === 3) {
+            $breadcrumbs = [
+                __('users.breadcrumbs.home') => route('home.index'),
+                __('users.breadcrumbs.users') => route('users.index'),
+                __('users.breadcrumbs.delete') => ''
+            ];
 
-        return view('dashboard/users/confirmDelete')->with(compact(['user', 'breadcrumbs']));
+            return view('dashboard/users/confirmDelete')->with(compact(['user', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 }

@@ -1,4 +1,5 @@
 @inject('testController', 'App\Services\TestController')
+@inject('userController', 'App\Services\UserController')
 
 <div class="container">
     <div class="row">
@@ -15,6 +16,17 @@
                             @if(auth()->user()->role_id === 2)
                                 <li class="nav-item {{ request()->path() === 'tests/create' ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('tests.create') }}">{{ __('tests.createTest') }}</a>
+                                </li>
+                            @elseif(auth()->user()->role_id === 3)
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ __('users.users') }}</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdown02">
+                                        @forelse($userController->getUsers() as $user)
+                                            <a class="dropdown-item" href="{{ route('users.edit', $user) }}">{{ $user->name }}</a>
+                                        @empty
+                                            <p>Нет пользователей</p>
+                                        @endforelse
+                                    </div>
                                 </li>
                             @endif
                                 <li class="nav-item dropdown">
