@@ -9,7 +9,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $breadcrumbs = ['home' => ''];
+        $breadcrumbs = [
+            __('tests.breadcrumbs.home') => '',
+        ];
 
         return view('tests.index')->with(compact('breadcrumbs'));
     }

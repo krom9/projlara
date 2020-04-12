@@ -1,7 +1,7 @@
 @extends('tests.layouts.base')
 
 @section('title')
-    Edit test
+    {{ __('tests.edit') }} {{ __('tests.breadcrumbs.answer') }}
 @endsection
 
 @section('content')

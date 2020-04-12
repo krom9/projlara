@@ -1,5 +1,5 @@
 {!! Form::open(['url' => route('answers.destroy', [$test, $answer]), 'method' => 'delete']) !!}
     <div class="form-group">
-        {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+        {!! Form::submit(__('tests.delete'), ['class' => 'btn btn-danger']) !!}
     </div>
 {!! Form::close() !!}

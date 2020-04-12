@@ -36,5 +36,13 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'remember_token' => Str::random(10),
         ]);
+        DB::table('users')->insert([
+            'name' => 'admin',
+            'role_id' => 3,
+            'email' => '12340@mail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('12345678'),
+            'remember_token' => Str::random(10),
+        ]);
     }
 }

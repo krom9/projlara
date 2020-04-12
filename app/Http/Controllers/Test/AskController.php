@@ -38,15 +38,21 @@ class AskController extends Controller
      */
     public function create(Test $test, Answer $answer):View
     {
-        $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'answer' => route('answers.show', [$test, $answer]),
-            'create ask' => ''
-        ];
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answers') => route('answers.index', $test),
+                __('tests.breadcrumbs.answer') => route('answers.show', [$test, $answer]),
+                __('tests.breadcrumbs.create') => ''
+            ];
 
-        return view('tests/asks/maker/create')->with(compact(['test', 'answer', 'breadcrumbs']));
+            return view('tests/asks/maker/create')->with(compact(['test', 'answer', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -88,15 +94,21 @@ class AskController extends Controller
      */
     public function edit(Test $test, Answer $answer, Ask $ask):View
     {
-        $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'answer' => route('answers.show', [$test, $answer]),
-            'edit ask' => ''
-        ];
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answers') => route('answers.index', $test),
+                __('tests.breadcrumbs.answer') => route('answers.show', [$test, $answer]),
+                __('tests.breadcrumbs.edit') => ''
+            ];
 
-        return view('tests/asks/maker/edit')->with(compact(['test', 'answer', 'ask', 'breadcrumbs']));
+            return view('tests/asks/maker/edit')->with(compact(['test', 'answer', 'ask', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -132,5 +144,24 @@ class AskController extends Controller
         $ask->delete();
 
         return redirect()->route('answers.show', [$test, $answer]);
+    }
+
+    public function confirmDelete(Test $test, Answer $answer, Ask $ask)
+    {
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answers') => route('answers.index', $test),
+                __('tests.breadcrumbs.answer') => route('answers.show', [$test, $answer]),
+                __('tests.breadcrumbs.delete') => ''
+            ];
+
+            return view('tests/asks/maker/confirmDelete')->with(compact(['test', 'answer', 'ask', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 }

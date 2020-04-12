@@ -30,15 +30,15 @@ class TestController extends Controller
     public function index():View
     {
         $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => ''
+            __('tests.breadcrumbs.home') => route('home.index'),
+            __('tests.breadcrumbs.tests') => ''
         ];
         $user = auth()->user();
-        if($user->role_id === 1)
+        if($user->role_id === 2)
         {
-            $tests = Test::all();
-        } else {
             $tests = Test::where('author_id', $user->id)->get();
+        } else {
+            $tests = Test::all();
         }
 
         return view('tests/tests/index')->with(compact(['tests', 'breadcrumbs']));
@@ -51,13 +51,18 @@ class TestController extends Controller
      */
     public function create():View
     {
-        $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'create test' => ''
-        ];
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.create') => ''
+            ];
 
-        return view('tests/tests/maker/create')->with(compact('breadcrumbs'));
+            return view('tests/tests/maker/create')->with(compact('breadcrumbs'));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -68,15 +73,16 @@ class TestController extends Controller
      */
     public function store(StoreRequest $request):RedirectResponse
     {
-        $user = Auth::user();
-//        if($user->role_id === 2)
-//        {
+        $user = auth()->user();
+        if($user->role_id !== 1)
+        {
             $data = $request->all();
             $data['author_id'] = $user->id;
             Test::create($data);
+        }
 
-            return redirect()->route('tests.index');
-//        }
+        return redirect()->route('tests.index');
+
     }
 
     /**
@@ -88,9 +94,9 @@ class TestController extends Controller
     public function show(Test $test):View
     {
         $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => ''
+            __('tests.breadcrumbs.home') => route('home.index'),
+            __('tests.breadcrumbs.tests') => route('tests.index'),
+            __('tests.breadcrumbs.test') => ''
         ];
         $user = auth()->user();
         if($user->role_id === 1)
@@ -110,14 +116,19 @@ class TestController extends Controller
      */
     public function edit(Test $test):View
     {
-        $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'edit test' => ''
-        ];
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.edit') => ''
+            ];
 
-        return view('tests/tests/maker/edit')->with(compact(['test', 'breadcrumbs']));
+            return view('tests/tests/maker/edit')->with(compact(['test', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -159,10 +170,10 @@ class TestController extends Controller
     public function result(Test $test):View
     {
         $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'result' => ''
+            __('tests.breadcrumbs.home') => route('home.index'),
+            __('tests.breadcrumbs.tests') => route('tests.index'),
+            __('tests.breadcrumbs.test') => route('tests.show', $test),
+            __('tests.breadcrumbs.result') => ''
         ];
 
         extract($this->makeResult($test));
@@ -220,5 +231,22 @@ class TestController extends Controller
         $result = "Ваш результат теста {$resultMark}";
 
         return compact(['result', 'resultDescription']);
+    }
+
+    public function confirmDelete(Test $test)
+    {
+        $user = auth()->user();
+        if($user->role_id !== 1) {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.delete') => ''
+            ];
+
+            return view('tests/tests/maker/confirmDelete')->with(compact(['test', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 }

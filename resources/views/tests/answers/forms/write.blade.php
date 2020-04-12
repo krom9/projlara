@@ -1,5 +1,3 @@
-<h2>Changing answer</h2>
-
 <form method="POST" action="{{ route('answers.write', [$test, $answer]) }}">
     @csrf
     @foreach($answer->asks as $ask)
@@ -14,5 +12,5 @@
         </div>
     @endforeach
     <input type="hidden" name="next" id="next" value="{{ $next }}">
-    <button type="submit">Next</button>
+    <button type="submit">{{ __('tests.next') }}</button>
 </form>

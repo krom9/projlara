@@ -1,12 +1,11 @@
 @extends('tests.layouts.base')
 
 @section('title')
-    Make test
+    {{ __('tests.add') }} {{ __('tests.breadcrumbs.ask') }}
 @endsection
 
 @section('content')
     <div class="container">
-        @include('tests.layouts.includes.breadcrumbs', ['items' => $breadcrumbs])
         @include('tests.asks.forms.create')
     </div>
 @endsection

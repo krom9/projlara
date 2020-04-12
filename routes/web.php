@@ -22,17 +22,28 @@ Route::namespace('Test')
     ->group(function () {
         Route::resource('tests','TestController');
         Route::get('tests/{test}/result', 'TestController@result')->name('tests.result');
+        Route::get('tests/confirm/{test}', 'TestController@confirmDelete')->name('tests.confirm');
 
         Route::prefix('tests/{test}')
             ->group(function (){
+                Route::resource('results', 'ResultController');
+                Route::get('results/confirm/{result}', 'ResultController@confirmDelete')->name('results.confirm');
                 Route::resource('answers', 'AnswerController');
                 Route::post('answers/write/{answer}/asks', 'AnswerController@write')->name('answers.write');
+                Route::get('answers/confirm/{answer}', 'AnswerController@confirmDelete')->name('answers.confirm');
 
                 Route::prefix('answers/{answer}')
                     ->group(function (){
                         Route::resource('asks', 'AskController');
+                        Route::get('asks/confirm/{ask}', 'AskController@confirmDelete')->name('asks.confirm');
                     });
             });
+    });
+
+Route::namespace('User')
+    ->group(function () {
+        Route::resource('users', 'UserController');
+        Route::get('users/confirm/{user}', 'UserController@confirmDelete')->name('users.confirm');
     });
 
 //Route::

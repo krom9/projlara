@@ -17,7 +17,7 @@ class CheckRole
     {
         $user = auth()->user();
         $rolesArray = explode(';', $roles);
-        if(in_array($user->role, $rolesArray))
+        if(in_array($user->role_id, $rolesArray))
         {
             return $next($request);
         } else {

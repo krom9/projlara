@@ -6,7 +6,6 @@
 
 @section('content')
     <div class="container">
-        @include('tests.layouts.includes.breadcrumbs', ['items' => $breadcrumbs])
         <h1>{{ $test->name }}</h1>
         <h2>Results</h2>
         <h3 class="pt-3 pb-1">{{ $result }}</h3>

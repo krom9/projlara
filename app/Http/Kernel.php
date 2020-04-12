@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -22,7 +23,9 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+//        CheckRole::class,
         SetLocale::class,
+//        isAdmin::class,
     ];
 
     /**
@@ -65,6 +68,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'roles' => CheckRole::class,
+//        'roles' => CheckRole::class,
+        'is.admin' => isAdmin::class,
     ];
 }

@@ -21,11 +21,30 @@ class AnswerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Test $test
+     * @return View
      */
-    public function index(Test $test)
+    public function index(Test $test):View
     {
+        $user = auth()->user();
+        if($user->role_id !== 1)
+        {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answers') => ''
+            ];
 
+            $answers = Answer::where('test_id', $test->id)
+                ->with('test')
+                ->orderBy('id')
+                ->get();
+
+            return view('tests/answers/maker/index')->with(compact(['test', 'answers', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -36,14 +55,21 @@ class AnswerController extends Controller
      */
     public function create(Test $test):View
     {
-        $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'create answer' => ''
-        ];
+        $user = auth()->user();
+        if($user->role_id !== 1)
+        {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answer') => route('answers.index', $test),
+                __('tests.breadcrumbs.create') => ''
+            ];
 
-        return view('tests/answers/maker/create')->with(compact(['test', 'breadcrumbs']));
+            return view('tests/answers/maker/create')->with(compact(['test', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -72,21 +98,19 @@ class AnswerController extends Controller
     public function show(Test $test, Answer $answer):View
     {
         $breadcrumbs = [
-            'home' => route('home.index'),
-            'tests' => route('tests.index'),
-            'test' => route('tests.show', $test),
-            'answer' => ''
+            __('tests.breadcrumbs.home') => route('home.index'),
+            __('tests.breadcrumbs.tests') => route('tests.index'),
+            __('tests.breadcrumbs.test') => route('tests.show', $test),
+            __('tests.breadcrumbs.answers') => route('answers.index', $test),
+            __('tests.breadcrumbs.answer') => ''
         ];
         $user = auth()->user();
-        if($user->role_id === 2)
+        if($user->role_id === 1)
         {
-            return view('tests/answers/maker/show')->with(compact(['test', 'answer', 'breadcrumbs']));
-        } else {
             $answers = Answer::select(['id'])
                 ->where('test_id', $test->id)
                 ->with('test')
                 ->get();
-//            dd($answers);
             $next = 0;
             for($i=0; $i<count($answers); $i++)
             {
@@ -99,7 +123,10 @@ class AnswerController extends Controller
             $next = ($next < count($answers))
                 ? route('answers.show', [$test, $answers[$next]->id])
                 : route('tests.result', [$test]);
+
             return view('tests/answers/tester/show')->with(compact(['test', 'answer', 'next']));
+        } else {
+            return view('tests/answers/maker/show')->with(compact(['test', 'answer', 'breadcrumbs']));
         }
     }
 
@@ -112,7 +139,22 @@ class AnswerController extends Controller
      */
     public function edit(Test $test, Answer $answer):View
     {
-        return view('tests/answers/maker/edit')->with(compact(['test', 'answer']));
+        $user = auth()->user();
+        if($user->role_id !== 1)
+        {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answers') => route('answers.index', $test),
+                __('tests.breadcrumbs.answer') => route('answers.show', [$test, $answer]),
+                __('tests.breadcrumbs.edit') => ''
+            ];
+
+            return view('tests/answers/maker/edit')->with(compact(['test', 'answer', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -125,10 +167,6 @@ class AnswerController extends Controller
      */
     public function update(StoreRequest $request, Test $test, Answer $answer):RedirectResponse
     {
-        $request->validate([
-            'text' => 'required|string',
-        ]);
-
         $answer->text = $request->get('text');
         $answer->save();
 
@@ -147,7 +185,7 @@ class AnswerController extends Controller
     {
         $answer->delete();
 
-        return redirect()->route('tests.show', $test);
+        return redirect()->route('answers.index', $test);
     }
 
     /**
@@ -174,5 +212,24 @@ class AnswerController extends Controller
         }
 
         return redirect($next);
+    }
+
+    public function confirmDelete(Test $test, Answer $answer)
+    {
+        $user = auth()->user();
+        if($user->role_id !== 1)
+        {
+            $breadcrumbs = [
+                __('tests.breadcrumbs.home') => route('home.index'),
+                __('tests.breadcrumbs.tests') => route('tests.index'),
+                __('tests.breadcrumbs.test') => route('tests.show', $test),
+                __('tests.breadcrumbs.answer') => route('answers.index', $test),
+                __('tests.breadcrumbs.delete') => ''
+            ];
+
+            return view('tests/answers/maker/confirmDelete')->with(compact(['test', 'answer', 'breadcrumbs']));
+        } else {
+            abort(404);
+        }
     }
 }

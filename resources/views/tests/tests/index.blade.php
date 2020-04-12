@@ -1,30 +1,19 @@
 @extends('tests.layouts.base')
 
 @section('title')
-    Tests
+    {{ __('tests.tests') }}
 @endsection
 
 @section('content')
     <div class="container">
-        @include('tests.layouts.includes.breadcrumbs', ['items' => $breadcrumbs])
-        <h1>Список тестов</h1>
+        <h1>{{ __('tests.tests') }}</h1>
 
-        <div class="row">
-            <div class="col-12">
-                @forelse($tests as $test)
-                    <p>
-                        <a href="{{ route('tests.show', [$test->id]) }}">{{ $test->name }}</a>
-                    </p>
-                @empty
-                    <p>Пока нет тестов</p>
-                @endforelse
-            </div>
-        </div>
+        <test-list :userid="{{ json_encode(auth()->user()->id) }}"></test-list>
 
-        @if(auth()->user()->role_id === 2)
+        @if(in_array(auth()->user()->role_id, [2, 3]))
             <div class="row">
                 <div class="col-12">
-                    <a class="btn btn-primary" href="{{ route('tests.create') }}">Add test</a>
+                    <a class="btn btn-primary" href="{{ route('tests.create') }}">{{ __('tests.add') }} {{ __('tests.breadcrumbs.test') }}</a>
                 </div>
             </div>
         @endif

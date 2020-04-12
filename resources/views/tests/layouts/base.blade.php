@@ -3,23 +3,41 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', trans('tests.title'))</title>
+    <title>@yield('title', __('tests.title'))</title>
+
+    <meta name="keywords" content="{{ __('tests.content') }}">
+    <meta name="description" content="{{ __('tests.description') }}">
+
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 </head>
+
+<style>
+    body {
+        padding-top: 4rem;
+    }
+</style>
+
 <body>
 
-@include('tests.layouts.includes.nav.index')
+<div id="app" class="">
 
-<main role="main">
-    <div class="container">
-        <div class="jumbotron">
-            @yield('content')
+    @include('tests.layouts.includes.nav.index')
+
+    <main role="main">
+
+        @include('tests.layouts.includes.breadcrumbs', ['items' => $breadcrumbs ?? null])
+
+        <div class="container">
+            <div class="jumbotron">
+                @yield('content')
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 
-@include('tests.layouts.includes.footer')
+</div>
+
+@stack('scripts')
 
 <script src="{{ mix('/js/app.js') }}"></script>
 </body>

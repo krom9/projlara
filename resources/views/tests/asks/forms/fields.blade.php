@@ -2,7 +2,7 @@
     <div class="col-sm-12 col-md-6">
 
         <div class="form-group">
-            {!! Form::label('text', 'Text') !!}
+            {!! Form::label('text', __('tests.fields.text')) !!}
             {!! Form::textarea('text', $ask->text ?? null, ['class' => 'form-control']) !!}
         </div>
         @error('text')
@@ -10,7 +10,7 @@
         @enderror
 
         <div class="form-group">
-            {!! Form::label('mark', 'Mark') !!}
+            {!! Form::label('mark', __('tests.fields.mark')) !!}
             {!! Form::number('mark', $ask->mark ?? null, ['class' => 'form-control']) !!}
         </div>
         @error('mark')

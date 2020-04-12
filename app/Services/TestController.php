@@ -14,11 +14,11 @@ class TestController extends Controller
         if(auth()->check())
         {
             $user = auth()->user();
-            if($user->role_id === 1)
+            if($user->role_id === 2)
             {
-                $tests = Test::all();
-            } else {
                 $tests = Test::where('author_id', $user->id)->get();
+            } else {
+                $tests = Test::all();
             }
 
             return $tests;
