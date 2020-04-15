@@ -103,13 +103,18 @@ class UserController extends Controller
      */
     public function edit(User $user):View
     {
-        if(auth()->user()->role_id === 3 || auth()->user()->id == $user->id)
+        if(auth()->user()->role_id === 3 || auth()->user()->id === $user->id)
         {
-            $breadcrumbs = [
-                __('users.breadcrumbs.home') => route('home.index'),
-                __('users.breadcrumbs.users') => route('users.index'),
-                __('users.breadcrumbs.edit') => ''
-            ];
+            if(auth()->user()->role_id === 3)
+            {
+                $breadcrumbs = [
+                    __('users.breadcrumbs.home') => route('home.index'),
+                    __('users.breadcrumbs.users') => route('users.index'),
+                    __('users.breadcrumbs.edit') => ''
+                ];
+            } else {
+                $breadcrumbs = [];
+            }
 
             return view('dashboard/users/edit')->with(compact(['user', 'breadcrumbs']));
         } else {
@@ -126,7 +131,7 @@ class UserController extends Controller
      */
     public function update(UpdateRequest $request, User $user):RedirectResponse
     {
-        if(auth()->user()->role_id === 3 || auth()->user()->id == $user->id) {
+        if(auth()->user()->role_id === 3 || auth()->user()->id === $user->id) {
             $data = $request->only(['name', 'email', 'password', 'role_id']);
 
             if (isset($data['password'])) {
@@ -137,7 +142,12 @@ class UserController extends Controller
 
             $user->update($data);
 
-            return redirect()->route('users.index');
+            if(auth()->user()->role_id === 3)
+            {
+                return redirect()->route('users.index');
+            } else {
+                return redirect()->route('home.index');
+            }
         } else {
             abort(404);
         }

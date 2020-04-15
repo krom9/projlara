@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         @include('tests.asks.forms.edit')
     </div>
 @endsection

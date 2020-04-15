@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         <h1>{{ $test->name }}</h1>
         <h2 class="py-3">{{ __('tests.results') }}</h2>
         <h3 class="pt-3 pb-1">{{ $result }}</h3>

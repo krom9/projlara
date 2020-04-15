@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         <h2>Вы действительно хотите удалить вопрос?</h2>
         <div class="row">
             <div class="col-12">

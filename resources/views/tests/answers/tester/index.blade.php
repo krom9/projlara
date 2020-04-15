@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         <h1>{{ $test->name }}</h1>
         <div class="row">
             @foreach($answers as $answer)

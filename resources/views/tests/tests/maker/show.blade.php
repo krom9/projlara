@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         <div class="row">
             <div class="col-12">
                 <h1>{{ $test->name }}</h1>
@@ -16,7 +16,7 @@
         </div>
 
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 py-3">
                 <p>
                     Редактировать
                     <a href="{{ route('answers.index', $test) }}">

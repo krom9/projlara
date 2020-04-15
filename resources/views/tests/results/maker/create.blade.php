@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div>
         @include('tests.results.forms.create', $test)
     </div>
 @endsection

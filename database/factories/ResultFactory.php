@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Result::class, function (Faker $faker)
 {
     return [
-        'min' => $faker->randomElement([0, 10, 20]),
+        'min' => $faker->randomElement([0, 1]),
         'max' => $faker->randomElement([30, 40, 50]),
         'text' => $faker->text(200),
     ];
